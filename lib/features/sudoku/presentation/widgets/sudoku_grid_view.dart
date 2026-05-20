@@ -32,8 +32,8 @@ class SudokuGridView extends StatelessWidget {
       aspectRatio: 1.0,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(width: 3.5, color: AppColors.gridOuter),
-          color: AppColors.surface,
+          border: Border.all(width: 3.5, color: context.gridOuter),
+          color: context.surfaceBg,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
@@ -67,14 +67,14 @@ class SudokuGridView extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border(
                           left: colIndex > 0 && colIndex % 3 == 0
-                              ? const BorderSide(width: 2.0, color: AppColors.subgridBorder)
+                              ? BorderSide(width: 2.0, color: context.subgridBorder)
                               : colIndex > 0
-                                  ? const BorderSide(width: 0.75, color: AppColors.cellBorder)
+                                  ? BorderSide(width: 0.75, color: context.cellBorder)
                                   : BorderSide.none,
                           top: rowIndex > 0 && rowIndex % 3 == 0
-                              ? const BorderSide(width: 2.0, color: AppColors.subgridBorder)
+                              ? BorderSide(width: 2.0, color: context.subgridBorder)
                               : rowIndex > 0
-                                  ? const BorderSide(width: 0.75, color: AppColors.cellBorder)
+                                  ? BorderSide(width: 0.75, color: context.cellBorder)
                                   : BorderSide.none,
                         ),
                       ),

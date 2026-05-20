@@ -6,12 +6,17 @@ import '../../../../core/algorithms/sudoku_solver.dart';
 import '../../domain/models/game_state.dart';
 import '../../domain/models/sudoku_board.dart';
 import '../../domain/models/sudoku_cell.dart';
+import '../../domain/models/board_move.dart';
 import '../../domain/repositories/sudoku_repository.dart';
 
 class SudokuCubit extends Cubit<GameState> {
   final SudokuRepository _repository;
   Timer? _timer;
   final List<SudokuBoard> _history = [];
+  
+  DateTime? _gameStartTime;
+  final List<BoardMove> _recordedMoves = [];
+  SudokuBoard? _initialBoard;
 
   SudokuCubit({SudokuRepository? repository})
       : _repository = repository ?? GetIt.I<SudokuRepository>(),
@@ -27,6 +32,9 @@ class SudokuCubit extends Cubit<GameState> {
     if (savedState != null) {
       _timer?.cancel();
       _history.clear();
+      _recordedMoves.clear();
+      _initialBoard = savedState.board;
+      _gameStartTime = DateTime.now();
       emit(savedState);
       if (!savedState.isCompleted && !savedState.isGameOver) {
         _startTimer();
@@ -39,12 +47,12 @@ class SudokuCubit extends Cubit<GameState> {
     await _repository.clearGameState();
   }
 
-  void startNewGame(String difficulty) {
+  void startNewGame(String difficulty, {int? seed}) {
     _timer?.cancel();
     _history.clear();
 
     // 1. Generate puzzle grid with SudokuGenerator
-    final puzzleGrid = SudokuGenerator.generate(difficulty);
+    final puzzleGrid = SudokuGenerator.generate(difficulty, seed: seed);
 
     // 2. Solve the puzzle grid using backtracking to get correct values
     // To avoid mutating puzzleGrid (which contains 0s), create a deep copy first
@@ -78,14 +86,25 @@ class SudokuCubit extends Cubit<GameState> {
       mistakesMade: 0,
       maxMistakes: 3,
       hintsUsed: 0,
-      maxHints: difficulty == 'hard' || difficulty == 'expert' ? 0 : 3,
+      maxHints: difficulty == 'easy'
+          ? 5
+          : difficulty == 'medium'
+              ? 4
+              : difficulty == 'hard'
+                  ? 3
+                  : 0,
       elapsedSeconds: 0,
       isCompleted: false,
       isGameOver: false,
       selectedRow: null,
       selectedCol: null,
       isNotesMode: false,
+      reviveUsed: false,
     ));
+
+    _recordedMoves.clear();
+    _initialBoard = board;
+    _gameStartTime = DateTime.now();
 
     _startTimer();
   }
@@ -142,8 +161,10 @@ class SudokuCubit extends Cubit<GameState> {
       }
 
       final updatedCell = cell.copyWith(notes: newNotes, value: 0, isInvalid: false);
+      _recordMove(r, c, digit, true);
       _updateCell(r, c, updatedCell);
     } else {
+      _recordMove(r, c, digit, false);
       final isCorrect = digit == cell.correctValue;
       if (isCorrect) {
         final updatedCell = cell.copyWith(value: digit, isInvalid: false, notes: const {});
@@ -189,6 +210,7 @@ class SudokuCubit extends Cubit<GameState> {
     if (cell.isClue) return;
 
     _history.add(state.board);
+    _recordMove(r, c, 0, false);
 
     final updatedCell = cell.copyWith(value: 0, isInvalid: false, notes: const {});
     _updateCell(r, c, updatedCell);
@@ -214,6 +236,7 @@ class SudokuCubit extends Cubit<GameState> {
     _history.add(state.board);
 
     final correctDigit = cell.correctValue;
+    _recordMove(r, c, correctDigit, false);
     final updatedCell = cell.copyWith(value: correctDigit, isInvalid: false, notes: const {});
     final updatedBoard = _getBoardWithRemovedNotes(r, c, correctDigit, updatedCell);
 
@@ -228,6 +251,46 @@ class SudokuCubit extends Cubit<GameState> {
     if (isCompleted) {
       _timer?.cancel();
     }
+  }
+
+  void retractMistake() {
+    if (!state.isGameOver) return;
+    _timer?.cancel();
+    emit(state.copyWith(
+      mistakesMade: state.mistakesMade - 1,
+      isGameOver: false,
+      reviveUsed: true,
+    ));
+    _startTimer();
+  }
+
+  void _recordMove(int row, int col, int value, bool isNote) {
+    if (_gameStartTime == null) return;
+    final offset = DateTime.now().difference(_gameStartTime!).inMilliseconds;
+    _recordedMoves.add(BoardMove(
+      timestampOffsetMs: offset,
+      row: row,
+      col: col,
+      val: value,
+      isNote: isNote,
+    ));
+  }
+
+  List<Map<String, dynamic>> getReplayPayload() {
+    final payload = <Map<String, dynamic>>[];
+    if (_initialBoard != null) {
+      payload.add({
+        'type': 'init',
+        'board': _initialBoard!.toJson(),
+      });
+    }
+    for (final move in _recordedMoves) {
+      payload.add({
+        'type': 'move',
+        'move': move.toJson(),
+      });
+    }
+    return payload;
   }
 
   void _updateCell(int r, int c, SudokuCell updatedCell) {

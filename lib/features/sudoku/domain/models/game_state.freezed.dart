@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GameState {
 
- SudokuBoard get board; String get difficulty; int get mistakesMade; int get maxMistakes; int get hintsUsed; int get maxHints; int get elapsedSeconds; bool get isCompleted; bool get isGameOver; int? get selectedRow; int? get selectedCol; bool get isNotesMode;
+ SudokuBoard get board; String get difficulty; int get mistakesMade; int get maxMistakes; int get hintsUsed; int get maxHints; int get elapsedSeconds; bool get isCompleted; bool get isGameOver; int? get selectedRow; int? get selectedCol; bool get isNotesMode; bool get reviveUsed;
 /// Create a copy of GameState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $GameStateCopyWith<GameState> get copyWith => _$GameStateCopyWithImpl<GameState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameState&&(identical(other.board, board) || other.board == board)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.mistakesMade, mistakesMade) || other.mistakesMade == mistakesMade)&&(identical(other.maxMistakes, maxMistakes) || other.maxMistakes == maxMistakes)&&(identical(other.hintsUsed, hintsUsed) || other.hintsUsed == hintsUsed)&&(identical(other.maxHints, maxHints) || other.maxHints == maxHints)&&(identical(other.elapsedSeconds, elapsedSeconds) || other.elapsedSeconds == elapsedSeconds)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.isGameOver, isGameOver) || other.isGameOver == isGameOver)&&(identical(other.selectedRow, selectedRow) || other.selectedRow == selectedRow)&&(identical(other.selectedCol, selectedCol) || other.selectedCol == selectedCol)&&(identical(other.isNotesMode, isNotesMode) || other.isNotesMode == isNotesMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameState&&(identical(other.board, board) || other.board == board)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.mistakesMade, mistakesMade) || other.mistakesMade == mistakesMade)&&(identical(other.maxMistakes, maxMistakes) || other.maxMistakes == maxMistakes)&&(identical(other.hintsUsed, hintsUsed) || other.hintsUsed == hintsUsed)&&(identical(other.maxHints, maxHints) || other.maxHints == maxHints)&&(identical(other.elapsedSeconds, elapsedSeconds) || other.elapsedSeconds == elapsedSeconds)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.isGameOver, isGameOver) || other.isGameOver == isGameOver)&&(identical(other.selectedRow, selectedRow) || other.selectedRow == selectedRow)&&(identical(other.selectedCol, selectedCol) || other.selectedCol == selectedCol)&&(identical(other.isNotesMode, isNotesMode) || other.isNotesMode == isNotesMode)&&(identical(other.reviveUsed, reviveUsed) || other.reviveUsed == reviveUsed));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,board,difficulty,mistakesMade,maxMistakes,hintsUsed,maxHints,elapsedSeconds,isCompleted,isGameOver,selectedRow,selectedCol,isNotesMode);
+int get hashCode => Object.hash(runtimeType,board,difficulty,mistakesMade,maxMistakes,hintsUsed,maxHints,elapsedSeconds,isCompleted,isGameOver,selectedRow,selectedCol,isNotesMode,reviveUsed);
 
 @override
 String toString() {
-  return 'GameState(board: $board, difficulty: $difficulty, mistakesMade: $mistakesMade, maxMistakes: $maxMistakes, hintsUsed: $hintsUsed, maxHints: $maxHints, elapsedSeconds: $elapsedSeconds, isCompleted: $isCompleted, isGameOver: $isGameOver, selectedRow: $selectedRow, selectedCol: $selectedCol, isNotesMode: $isNotesMode)';
+  return 'GameState(board: $board, difficulty: $difficulty, mistakesMade: $mistakesMade, maxMistakes: $maxMistakes, hintsUsed: $hintsUsed, maxHints: $maxHints, elapsedSeconds: $elapsedSeconds, isCompleted: $isCompleted, isGameOver: $isGameOver, selectedRow: $selectedRow, selectedCol: $selectedCol, isNotesMode: $isNotesMode, reviveUsed: $reviveUsed)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $GameStateCopyWith<$Res>  {
   factory $GameStateCopyWith(GameState value, $Res Function(GameState) _then) = _$GameStateCopyWithImpl;
 @useResult
 $Res call({
- SudokuBoard board, String difficulty, int mistakesMade, int maxMistakes, int hintsUsed, int maxHints, int elapsedSeconds, bool isCompleted, bool isGameOver, int? selectedRow, int? selectedCol, bool isNotesMode
+ SudokuBoard board, String difficulty, int mistakesMade, int maxMistakes, int hintsUsed, int maxHints, int elapsedSeconds, bool isCompleted, bool isGameOver, int? selectedRow, int? selectedCol, bool isNotesMode, bool reviveUsed
 });
 
 
@@ -65,7 +65,7 @@ class _$GameStateCopyWithImpl<$Res>
 
 /// Create a copy of GameState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? board = null,Object? difficulty = null,Object? mistakesMade = null,Object? maxMistakes = null,Object? hintsUsed = null,Object? maxHints = null,Object? elapsedSeconds = null,Object? isCompleted = null,Object? isGameOver = null,Object? selectedRow = freezed,Object? selectedCol = freezed,Object? isNotesMode = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? board = null,Object? difficulty = null,Object? mistakesMade = null,Object? maxMistakes = null,Object? hintsUsed = null,Object? maxHints = null,Object? elapsedSeconds = null,Object? isCompleted = null,Object? isGameOver = null,Object? selectedRow = freezed,Object? selectedCol = freezed,Object? isNotesMode = null,Object? reviveUsed = null,}) {
   return _then(_self.copyWith(
 board: null == board ? _self.board : board // ignore: cast_nullable_to_non_nullable
 as SudokuBoard,difficulty: null == difficulty ? _self.difficulty : difficulty // ignore: cast_nullable_to_non_nullable
@@ -79,6 +79,7 @@ as bool,isGameOver: null == isGameOver ? _self.isGameOver : isGameOver // ignore
 as bool,selectedRow: freezed == selectedRow ? _self.selectedRow : selectedRow // ignore: cast_nullable_to_non_nullable
 as int?,selectedCol: freezed == selectedCol ? _self.selectedCol : selectedCol // ignore: cast_nullable_to_non_nullable
 as int?,isNotesMode: null == isNotesMode ? _self.isNotesMode : isNotesMode // ignore: cast_nullable_to_non_nullable
+as bool,reviveUsed: null == reviveUsed ? _self.reviveUsed : reviveUsed // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -173,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SudokuBoard board,  String difficulty,  int mistakesMade,  int maxMistakes,  int hintsUsed,  int maxHints,  int elapsedSeconds,  bool isCompleted,  bool isGameOver,  int? selectedRow,  int? selectedCol,  bool isNotesMode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SudokuBoard board,  String difficulty,  int mistakesMade,  int maxMistakes,  int hintsUsed,  int maxHints,  int elapsedSeconds,  bool isCompleted,  bool isGameOver,  int? selectedRow,  int? selectedCol,  bool isNotesMode,  bool reviveUsed)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GameState() when $default != null:
-return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistakes,_that.hintsUsed,_that.maxHints,_that.elapsedSeconds,_that.isCompleted,_that.isGameOver,_that.selectedRow,_that.selectedCol,_that.isNotesMode);case _:
+return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistakes,_that.hintsUsed,_that.maxHints,_that.elapsedSeconds,_that.isCompleted,_that.isGameOver,_that.selectedRow,_that.selectedCol,_that.isNotesMode,_that.reviveUsed);case _:
   return orElse();
 
 }
@@ -194,10 +195,10 @@ return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistake
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SudokuBoard board,  String difficulty,  int mistakesMade,  int maxMistakes,  int hintsUsed,  int maxHints,  int elapsedSeconds,  bool isCompleted,  bool isGameOver,  int? selectedRow,  int? selectedCol,  bool isNotesMode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SudokuBoard board,  String difficulty,  int mistakesMade,  int maxMistakes,  int hintsUsed,  int maxHints,  int elapsedSeconds,  bool isCompleted,  bool isGameOver,  int? selectedRow,  int? selectedCol,  bool isNotesMode,  bool reviveUsed)  $default,) {final _that = this;
 switch (_that) {
 case _GameState():
-return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistakes,_that.hintsUsed,_that.maxHints,_that.elapsedSeconds,_that.isCompleted,_that.isGameOver,_that.selectedRow,_that.selectedCol,_that.isNotesMode);case _:
+return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistakes,_that.hintsUsed,_that.maxHints,_that.elapsedSeconds,_that.isCompleted,_that.isGameOver,_that.selectedRow,_that.selectedCol,_that.isNotesMode,_that.reviveUsed);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -214,10 +215,10 @@ return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistake
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SudokuBoard board,  String difficulty,  int mistakesMade,  int maxMistakes,  int hintsUsed,  int maxHints,  int elapsedSeconds,  bool isCompleted,  bool isGameOver,  int? selectedRow,  int? selectedCol,  bool isNotesMode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SudokuBoard board,  String difficulty,  int mistakesMade,  int maxMistakes,  int hintsUsed,  int maxHints,  int elapsedSeconds,  bool isCompleted,  bool isGameOver,  int? selectedRow,  int? selectedCol,  bool isNotesMode,  bool reviveUsed)?  $default,) {final _that = this;
 switch (_that) {
 case _GameState() when $default != null:
-return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistakes,_that.hintsUsed,_that.maxHints,_that.elapsedSeconds,_that.isCompleted,_that.isGameOver,_that.selectedRow,_that.selectedCol,_that.isNotesMode);case _:
+return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistakes,_that.hintsUsed,_that.maxHints,_that.elapsedSeconds,_that.isCompleted,_that.isGameOver,_that.selectedRow,_that.selectedCol,_that.isNotesMode,_that.reviveUsed);case _:
   return null;
 
 }
@@ -229,7 +230,7 @@ return $default(_that.board,_that.difficulty,_that.mistakesMade,_that.maxMistake
 @JsonSerializable()
 
 class _GameState implements GameState {
-  const _GameState({required this.board, required this.difficulty, this.mistakesMade = 0, required this.maxMistakes, this.hintsUsed = 0, required this.maxHints, this.elapsedSeconds = 0, this.isCompleted = false, this.isGameOver = false, this.selectedRow, this.selectedCol, this.isNotesMode = false});
+  const _GameState({required this.board, required this.difficulty, this.mistakesMade = 0, required this.maxMistakes, this.hintsUsed = 0, required this.maxHints, this.elapsedSeconds = 0, this.isCompleted = false, this.isGameOver = false, this.selectedRow, this.selectedCol, this.isNotesMode = false, this.reviveUsed = false});
   factory _GameState.fromJson(Map<String, dynamic> json) => _$GameStateFromJson(json);
 
 @override final  SudokuBoard board;
@@ -244,6 +245,7 @@ class _GameState implements GameState {
 @override final  int? selectedRow;
 @override final  int? selectedCol;
 @override@JsonKey() final  bool isNotesMode;
+@override@JsonKey() final  bool reviveUsed;
 
 /// Create a copy of GameState
 /// with the given fields replaced by the non-null parameter values.
@@ -258,16 +260,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameState&&(identical(other.board, board) || other.board == board)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.mistakesMade, mistakesMade) || other.mistakesMade == mistakesMade)&&(identical(other.maxMistakes, maxMistakes) || other.maxMistakes == maxMistakes)&&(identical(other.hintsUsed, hintsUsed) || other.hintsUsed == hintsUsed)&&(identical(other.maxHints, maxHints) || other.maxHints == maxHints)&&(identical(other.elapsedSeconds, elapsedSeconds) || other.elapsedSeconds == elapsedSeconds)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.isGameOver, isGameOver) || other.isGameOver == isGameOver)&&(identical(other.selectedRow, selectedRow) || other.selectedRow == selectedRow)&&(identical(other.selectedCol, selectedCol) || other.selectedCol == selectedCol)&&(identical(other.isNotesMode, isNotesMode) || other.isNotesMode == isNotesMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameState&&(identical(other.board, board) || other.board == board)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.mistakesMade, mistakesMade) || other.mistakesMade == mistakesMade)&&(identical(other.maxMistakes, maxMistakes) || other.maxMistakes == maxMistakes)&&(identical(other.hintsUsed, hintsUsed) || other.hintsUsed == hintsUsed)&&(identical(other.maxHints, maxHints) || other.maxHints == maxHints)&&(identical(other.elapsedSeconds, elapsedSeconds) || other.elapsedSeconds == elapsedSeconds)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.isGameOver, isGameOver) || other.isGameOver == isGameOver)&&(identical(other.selectedRow, selectedRow) || other.selectedRow == selectedRow)&&(identical(other.selectedCol, selectedCol) || other.selectedCol == selectedCol)&&(identical(other.isNotesMode, isNotesMode) || other.isNotesMode == isNotesMode)&&(identical(other.reviveUsed, reviveUsed) || other.reviveUsed == reviveUsed));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,board,difficulty,mistakesMade,maxMistakes,hintsUsed,maxHints,elapsedSeconds,isCompleted,isGameOver,selectedRow,selectedCol,isNotesMode);
+int get hashCode => Object.hash(runtimeType,board,difficulty,mistakesMade,maxMistakes,hintsUsed,maxHints,elapsedSeconds,isCompleted,isGameOver,selectedRow,selectedCol,isNotesMode,reviveUsed);
 
 @override
 String toString() {
-  return 'GameState(board: $board, difficulty: $difficulty, mistakesMade: $mistakesMade, maxMistakes: $maxMistakes, hintsUsed: $hintsUsed, maxHints: $maxHints, elapsedSeconds: $elapsedSeconds, isCompleted: $isCompleted, isGameOver: $isGameOver, selectedRow: $selectedRow, selectedCol: $selectedCol, isNotesMode: $isNotesMode)';
+  return 'GameState(board: $board, difficulty: $difficulty, mistakesMade: $mistakesMade, maxMistakes: $maxMistakes, hintsUsed: $hintsUsed, maxHints: $maxHints, elapsedSeconds: $elapsedSeconds, isCompleted: $isCompleted, isGameOver: $isGameOver, selectedRow: $selectedRow, selectedCol: $selectedCol, isNotesMode: $isNotesMode, reviveUsed: $reviveUsed)';
 }
 
 
@@ -278,7 +280,7 @@ abstract mixin class _$GameStateCopyWith<$Res> implements $GameStateCopyWith<$Re
   factory _$GameStateCopyWith(_GameState value, $Res Function(_GameState) _then) = __$GameStateCopyWithImpl;
 @override @useResult
 $Res call({
- SudokuBoard board, String difficulty, int mistakesMade, int maxMistakes, int hintsUsed, int maxHints, int elapsedSeconds, bool isCompleted, bool isGameOver, int? selectedRow, int? selectedCol, bool isNotesMode
+ SudokuBoard board, String difficulty, int mistakesMade, int maxMistakes, int hintsUsed, int maxHints, int elapsedSeconds, bool isCompleted, bool isGameOver, int? selectedRow, int? selectedCol, bool isNotesMode, bool reviveUsed
 });
 
 
@@ -295,7 +297,7 @@ class __$GameStateCopyWithImpl<$Res>
 
 /// Create a copy of GameState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? board = null,Object? difficulty = null,Object? mistakesMade = null,Object? maxMistakes = null,Object? hintsUsed = null,Object? maxHints = null,Object? elapsedSeconds = null,Object? isCompleted = null,Object? isGameOver = null,Object? selectedRow = freezed,Object? selectedCol = freezed,Object? isNotesMode = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? board = null,Object? difficulty = null,Object? mistakesMade = null,Object? maxMistakes = null,Object? hintsUsed = null,Object? maxHints = null,Object? elapsedSeconds = null,Object? isCompleted = null,Object? isGameOver = null,Object? selectedRow = freezed,Object? selectedCol = freezed,Object? isNotesMode = null,Object? reviveUsed = null,}) {
   return _then(_GameState(
 board: null == board ? _self.board : board // ignore: cast_nullable_to_non_nullable
 as SudokuBoard,difficulty: null == difficulty ? _self.difficulty : difficulty // ignore: cast_nullable_to_non_nullable
@@ -309,6 +311,7 @@ as bool,isGameOver: null == isGameOver ? _self.isGameOver : isGameOver // ignore
 as bool,selectedRow: freezed == selectedRow ? _self.selectedRow : selectedRow // ignore: cast_nullable_to_non_nullable
 as int?,selectedCol: freezed == selectedCol ? _self.selectedCol : selectedCol // ignore: cast_nullable_to_non_nullable
 as int?,isNotesMode: null == isNotesMode ? _self.isNotesMode : isNotesMode // ignore: cast_nullable_to_non_nullable
+as bool,reviveUsed: null == reviveUsed ? _self.reviveUsed : reviveUsed // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

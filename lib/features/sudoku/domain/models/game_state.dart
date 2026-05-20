@@ -19,6 +19,7 @@ abstract class GameState with _$GameState {
     int? selectedRow,
     int? selectedCol,
     @Default(false) bool isNotesMode,
+    @Default(false) bool reviveUsed,
   }) = _GameState;
 
   factory GameState.fromJson(Map<String, dynamic> json) =>

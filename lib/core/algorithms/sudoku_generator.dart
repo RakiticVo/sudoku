@@ -6,12 +6,14 @@ class SudokuGenerator {
   static final Random _random = Random();
 
   /// Generates a valid puzzle targeting the given [difficulty].
-  static List<List<int>> generate(String difficulty) {
+  /// Optionally takes a [seed] for deterministic layout generation.
+  static List<List<int>> generate(String difficulty, {int? seed}) {
     final startTime = DateTime.now();
     const timeout = Duration(milliseconds: 1200);
+    final rand = seed != null ? Random(seed) : _random;
 
     List<List<int>> grid = List.generate(9, (_) => List.filled(9, 0));
-    _fillDiagonal(grid);
+    _fillDiagonal(grid, rand);
     SudokuSolver.solve(grid);
 
     int minClues, maxClues;
@@ -27,8 +29,8 @@ class SudokuGenerator {
         minClues = 17; maxClues = 24; break;
     }
 
-    int targetClues = minClues + _random.nextInt(maxClues - minClues + 1);
-    List<int> coords = List.generate(81, (i) => i)..shuffle(_random);
+    int targetClues = minClues + rand.nextInt(maxClues - minClues + 1);
+    List<int> coords = List.generate(81, (i) => i)..shuffle(rand);
     int remainingClues = 81;
 
     for (int pos in coords) {
@@ -63,18 +65,18 @@ class SudokuGenerator {
     return grid;
   }
 
-  static void _fillDiagonal(List<List<int>> grid) {
+  static void _fillDiagonal(List<List<int>> grid, Random rand) {
     for (int i = 0; i < 9; i = i + 3) {
-      _fillBox(grid, i, i);
+      _fillBox(grid, i, i, rand);
     }
   }
 
-  static void _fillBox(List<List<int>> grid, int rowStart, int colStart) {
+  static void _fillBox(List<List<int>> grid, int rowStart, int colStart, Random rand) {
     int num;
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         do {
-          num = _random.nextInt(9) + 1;
+          num = rand.nextInt(9) + 1;
         } while (!_isSafeInBox(grid, rowStart, colStart, num));
         grid[rowStart + i][colStart + j] = num;
       }

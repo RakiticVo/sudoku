@@ -115,6 +115,6 @@
     "serverCommand": "npx @agentmemory/agentmemory",
     "mcpCommand": "npx -y @agentmemory/mcp"
   },
-  "installedAt": "2026-05-19T07:02:19.799Z",
+  "installedAt": "2026-05-20T02:47:43.977Z",
   "checksum": "9194f8bd229379b5e80028590ef97f75eb5b7dcdbe2e42d9779e06e316197a1e"
 }

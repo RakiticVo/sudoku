@@ -19,6 +19,7 @@ _GameState _$GameStateFromJson(Map<String, dynamic> json) => _GameState(
   selectedRow: (json['selectedRow'] as num?)?.toInt(),
   selectedCol: (json['selectedCol'] as num?)?.toInt(),
   isNotesMode: json['isNotesMode'] as bool? ?? false,
+  reviveUsed: json['reviveUsed'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$GameStateToJson(_GameState instance) =>
@@ -35,4 +36,5 @@ Map<String, dynamic> _$GameStateToJson(_GameState instance) =>
       'selectedRow': instance.selectedRow,
       'selectedCol': instance.selectedCol,
       'isNotesMode': instance.isNotesMode,
+      'reviveUsed': instance.reviveUsed,
     };

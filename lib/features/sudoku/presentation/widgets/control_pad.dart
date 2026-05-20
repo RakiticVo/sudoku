@@ -5,14 +5,16 @@ import '../../../../core/style/design_system.dart';
 class TactileButton extends StatefulWidget {
   final Widget child;
   final VoidCallback onTap;
-  final Color backgroundColor;
+  final Color? backgroundColor;
+  final Color? borderColor;
   final bool isActive;
 
   const TactileButton({
     super.key,
     required this.child,
     required this.onTap,
-    this.backgroundColor = AppColors.keyBackground,
+    this.backgroundColor,
+    this.borderColor,
     this.isActive = false,
   });
 
@@ -44,6 +46,10 @@ class _TactileButtonState extends State<TactileButton> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    final defaultBg = context.keyBg;
+    final activeBg = context.isDark ? context.subgridBorder : context.keyBg.withValues(alpha: 0.5);
+    final finalBg = widget.isActive ? activeBg : (widget.backgroundColor ?? defaultBg);
+
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) {
@@ -55,10 +61,10 @@ class _TactileButtonState extends State<TactileButton> with SingleTickerProvider
         scale: _scaleAnimation,
         child: Container(
           decoration: BoxDecoration(
-            color: widget.isActive ? AppColors.keyActiveBackground : widget.backgroundColor,
+            color: finalBg,
             borderRadius: BorderRadius.circular(6.0),
             border: Border.all(
-              color: widget.isActive ? AppColors.subgridBorder : AppColors.cellBorder,
+              color: widget.borderColor ?? (widget.isActive ? context.subgridBorder : context.cellBorder),
               width: 1.2,
             ),
             boxShadow: [
@@ -98,43 +104,46 @@ class ActionBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hintsRemaining = maxHints - hintsUsed;
+    final hintsRemaining = maxHints > 0 ? (maxHints - hintsUsed).clamp(0, maxHints) : 0;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildActionButton(
+          context,
           icon: Icons.undo_outlined,
           label: 'Undo',
           onTap: onUndo,
         ),
         const SizedBox(width: 8),
         _buildActionButton(
+          context,
           icon: Icons.delete_outline,
           label: 'Erase',
           onTap: onErase,
         ),
         const SizedBox(width: 8),
         _buildActionButton(
+          context,
           icon: Icons.edit_outlined,
           label: 'Notes',
           isActive: isNotesMode,
           onTap: onToggleNotes,
         ),
-        if (maxHints > 0) ...[
-          const SizedBox(width: 8),
-          _buildActionButton(
-            icon: Icons.lightbulb_outline,
-            label: 'Hint ($hintsRemaining)',
-            onTap: onHint,
-            isDisabled: hintsRemaining <= 0,
-          ),
-        ],
+        const SizedBox(width: 8),
+        _buildActionButton(
+          context,
+          icon: Icons.lightbulb_outline,
+          label: 'Hint ($hintsRemaining)',
+          onTap: onHint,
+          isDisabled: false,
+        ),
       ],
     );
   }
 
-  Widget _buildActionButton({
+  Widget _buildActionButton(
+    BuildContext context, {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
@@ -151,11 +160,11 @@ class ActionBarWidget extends StatelessWidget {
             height: 40,
             child: TactileButton(
               isActive: isActive,
-              backgroundColor: AppColors.surface,
+              backgroundColor: context.surfaceBg,
               onTap: isDisabled ? () {} : onTap,
               child: Icon(
                 icon,
-                color: isActive ? AppColors.textUser : AppColors.keyText,
+                color: isActive ? context.textUser : context.keyText,
                 size: 20,
               ),
             ),
@@ -163,10 +172,10 @@ class ActionBarWidget extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
-              color: AppColors.keyText,
+              color: context.keyText,
             ),
           ),
         ],
@@ -216,27 +225,27 @@ class NumberKeypadWidget extends StatelessWidget {
                 opacity: isComplete ? 0.35 : 1.0,
                 child: TactileButton(
                   onTap: () => onNumberTap(digit),
-                  backgroundColor: AppColors.keyBackground,
+                  backgroundColor: context.keyBg,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
                       Text(
                         '$digit',
-                        style: const TextStyle(
-                          fontFamily: 'Georgia',
+                        style: TextStyle(
+                          fontFamily: context.fontFamily,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.keyText,
+                          color: context.keyText,
                         ),
                       ),
                       if (isComplete)
-                        const Positioned(
+                        Positioned(
                           top: 4,
                           right: 4,
                           child: Icon(
                             Icons.check_circle,
                             size: 10,
-                            color: AppColors.textNote,
+                            color: context.textNote,
                           ),
                         ),
                     ],
